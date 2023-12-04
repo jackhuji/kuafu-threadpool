@@ -2,10 +2,12 @@ package com.zeus.kuafu.monitor;
 
 import com.zeus.kuafu.common.DynamicConstants;
 import com.zeus.kuafu.common.InetUtils;
+import com.zeus.kuafu.config.DynamicConfig;
 import lombok.extern.slf4j.Slf4j;
 import com.zeus.kuafu.core.AdjustExecutor;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.Ordered;
@@ -29,16 +31,18 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class DynamicThreadPoolMonitor implements ApplicationRunner, Ordered {
 
+    @Autowired
+    private DynamicConfig dynamicConfig;
+
     private static final ScheduledExecutorService schedulerTaskPool = Executors.newScheduledThreadPool(1);
 
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
-        log.info("监控启动成功");
 
         // 获取间隔时间
         Integer interval = DynamicConstants.DEFAULT_INTERVAL;
-        if (Objects.nonNull(AdjustExecutor.getDynamicConfig())) {
-            interval = AdjustExecutor.getDynamicConfig().getCollectTime();
+        if (Objects.nonNull(dynamicConfig) && Objects.nonNull(dynamicConfig.getCollectTime())) {
+            interval = dynamicConfig.getCollectTime();
         }
 
         schedulerTaskPool.scheduleAtFixedRate(new Runnable() {
@@ -111,6 +115,6 @@ public class DynamicThreadPoolMonitor implements ApplicationRunner, Ordered {
 
     @Override
     public int getOrder() {
-        return Integer.MAX_VALUE+1;
+        return Integer.MAX_VALUE;
     }
 }

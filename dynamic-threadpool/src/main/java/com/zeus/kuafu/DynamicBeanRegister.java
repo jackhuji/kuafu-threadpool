@@ -1,8 +1,7 @@
 package com.zeus.kuafu;
 
-import com.zeus.kuafu.common.DynamicProperties;
-import com.zeus.kuafu.common.KuafuApplicationContextHelper;
 import com.zeus.kuafu.common.DynamicConstants;
+import com.zeus.kuafu.common.DynamicProperties;
 import com.zeus.kuafu.config.DynamicConfig;
 import com.zeus.kuafu.config.DynamicConfigInit;
 import com.zeus.kuafu.config.DynamicConfigListener;
@@ -37,11 +36,6 @@ public class DynamicBeanRegister {
         this.dynamicProperties = dynamicProperties;
     }
 
-    @Bean
-    public KuafuApplicationContextHelper getApplicationContextHelper(){
-        return new KuafuApplicationContextHelper();
-    }
-
     /**
      * 动态配置
      * @return
@@ -50,12 +44,6 @@ public class DynamicBeanRegister {
     @ConditionalOnMissingBean
     public DynamicConfig getDynamicConfig(){
         return new DynamicConfig();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public AdjustExecutor getExecutor(){
-        return new AdjustExecutor();
     }
 
     /**
@@ -68,28 +56,34 @@ public class DynamicBeanRegister {
         return new InitPoolMap();
     }
 
+    /**
+     * 配置初始化
+     * @return
+     */
     @Bean
     @ConditionalOnMissingBean
     public DynamicConfigInit getListener(){
         return new DynamicConfigInit();
     }
 
+    /**
+     * 配置监听器
+     * @return
+     */
     @Bean
     @ConditionalOnMissingBean
     public DynamicConfigListener getStarter(){
         return new DynamicConfigListener();
     }
 
+    /**
+     * 线程池监控
+     * @return
+     */
     @Bean
     @ConditionalOnMissingBean
     public DynamicThreadPoolMonitor getMonitor(){
         return new DynamicThreadPoolMonitor();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public DingNotifyService getNotify() {
-        return new DingNotifyService(dynamicProperties);
     }
 
 }
